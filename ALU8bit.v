@@ -15,8 +15,8 @@ module ALU8bit(input [2:0] sel, input [7:0] A, B, output reg [7:0] C);
 				C <= A | B;
 			4: // XOR
 				C <= A ^ B;
-			default: C <= A;
-		endcase
+			default: C <= B;
+endcase
 	end // always
 
 endmodule
