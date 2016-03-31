@@ -2,20 +2,20 @@
 // John Wilkes
 
 // Instruction set:
-// 00000 move reg to C
-// 00001 move C to reg
-// 00010 move const to C
-// 00011 move reg to A
-// 00100 move reg to mem (not implemented)
-// 00101 move mem to reg (not implemented)
-// 00110 not
-// 00111 and (not implemented)
-// 01000 or (not implemented)
-// 01001 xor (not implemented)
-// 01010 add (not implemented)
-// 01011 sub (not implemented)
-// 01100 inc (not implemented)
-// 01101
+// 00000 NOP
+// 00001 move reg to RC
+// 00010 move const to RC
+// 00011 move RC to reg
+// 00100 move reg to RA
+// 00101 load from memory (not implemented)
+// 00110 store to memory (not implemented)
+// 00111 not
+// 01000 and
+// 01001 or
+// 01010 xor
+// 01011 add (not implemented)
+// 01100 sub (not implemented)
+// 01101 inc (not implemented)
 // 01110
 // 01111
 // 10000
@@ -33,34 +33,41 @@
 // 11100
 // 11101
 // 11110
-// 11111 NOP (not implemented)
+// 11111
 
-module ControlUnit(input clk, rst, input [7:0] inst, output [2:0] regSel, output reg [2:0] aluSel, output Rin, Rout, RAin, RCout, genConst);
+module ControlUnit(input rst, input [7:0] inst, output [2:0] regSel, output reg [2:0] aluSel, output Rin, Rout, RAin, RCout, genConst);
 
-	wire [31:0] opNum;
-	Decoder5to32 iDec(inst[7:3], opNum);
+    wire [31:0] opNum;
+    assign instNop        = opNum[ 0];
+    assign instMovRegRC   = opNum[ 1];
+    assign instMovConstRC = opNum[ 2];
+    assign instMovRCReg   = opNum[ 3];
+    assign instMovRegRA   = opNum[ 4];
+    assign instNot        = opNum[ 7];
+    assign instAnd        = opNum[ 8];
+    assign instOr         = opNum[ 9];
+    assign instXor        = opNum[10];
 
-	// register control signals
-	assign Rin   = ~rst & opNum[1];
-	assign Rout  = ~rst & (opNum[0] | opNum[3] | opNum[6]);
-	assign RAin  = ~rst & opNum[3];
-	assign RCout = ~rst & opNum[1];
+    Decoder5to32 iDec(inst[7:3], opNum);
 
-	assign regSel = inst[2:0];
-	assign genConst = ~rst & opNum[2];
+    // register control signals
+    assign Rin   = ~rst & instMovRCReg;
+    assign Rout  = ~rst & (instMovRegRC | instMovRegRA | instNot | instAnd | instOr | instXor);
+    assign RAin  = ~rst & instMovRegRA;
+    assign RCout = ~rst & instMovRCReg;
 
-	always @(inst) begin
-		// select ALU functionality
-		case (inst[7:3])
-			0: aluSel <= 3'b000;
-			2: aluSel <= 3'b000;
-			6: aluSel <= 3'b001;
-			default: aluSel <= 3'b000;
-		endcase
-	end
+    assign regSel = {~rst, ~rst, ~rst} & inst[2:0];
+    assign genConst = ~rst & instMovConstRC;
 
-	always @(posedge clk) begin
-
-	end
+    always @(inst) begin
+        // select ALU functionality
+        case (inst[7:3])
+             7: aluSel <= 3'b001;
+             8: aluSel <= 3'b010;
+             9: aluSel <= 3'b011;
+            10: aluSel <= 3'b100;
+            default: aluSel <= 3'b000;
+        endcase
+    end
 
 endmodule
