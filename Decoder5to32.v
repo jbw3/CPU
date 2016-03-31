@@ -1,4 +1,4 @@
-// Decoder5to32
+// Decoder5to32.v
 // John Wilkes
 
 module Decoder5to32(input [4:0] I, output reg [31:0] O);
