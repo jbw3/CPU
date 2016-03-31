@@ -1,4 +1,4 @@
-// ControlUnit8bit.v
+// ControlUnit.v
 // John Wilkes
 
 // Instruction set:
