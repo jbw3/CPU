@@ -3,16 +3,20 @@
 VC = iverilog
 
 .PHONY: all
-all: ALU8bit_tb ControlUnit_tb
-	vvp ALU8bit_tb
-	vvp ControlUnit_tb
+all: ALU8bit_tb ControlUnit_tb CPU_tb
 
 ALU8bit_tb: ALU8bit_tb.v ../ALU8bit.v
 	$(VC) -o $@ $^
+	vvp ALU8bit_tb
 
 ControlUnit_tb: ControlUnit_tb.v ../ControlUnit.v ../Decoder5to32.v
 	$(VC) -o $@ $^
+	vvp ControlUnit_tb
+
+CPU_tb: CPU_tb.v ../CPU8bit.v ../ControlUnit.v ../GPRegisters.v ../ALU8bit.v ../TriState.v ../Register.v ../Decoder3to8.v ../Decoder5to32.v
+	$(VC) -o $@ $^
+	vvp CPU_tb
 
 .PHONY: clean
 clean:
-	rm -f ALU8bit_tb
+	rm -f ALU8bit_tb ControlUnit_tb CPU_tb

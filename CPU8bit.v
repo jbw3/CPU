@@ -33,7 +33,7 @@ module CPU(input clk, rst);
     Register ra(clk, rst, RAin, bus, raOut);
     Register rc(clk, rst, 1'b1, rcIn, rcOut);
 
-    TriState8 tc(RCout, rcOut, bus);
+    TriState tc(RCout, rcOut, bus);
 
     ALU8bit ALU(aluSel, raOut, bus, rcIn);
 

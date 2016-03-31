@@ -1,15 +1,19 @@
-// TB_CPU8bit.v
+// CPU_tb.v
 // John Wilkes
 
-module TB_CPU;
+module CPU_tb;
 
 	reg [7:0] inst; // instruction
 	reg clk, rst;
 	CPU cpu(clk, rst);
 
-	assign cpu.iBus = inst;
+	// temporary until we read instructions from memory
+	assign cpu.inst = inst;
 
 	initial begin
+		$dumpfile("CPU.vcd");
+		$dumpvars(0, CPU_tb);
+
 		clk = 1'b0;
 		rst = 1'b1;
 		inst = 8'h00;
@@ -23,29 +27,31 @@ module TB_CPU;
 		@(negedge clk);
 		rst = 0;
 
-		// move const 5 to C
-		inst <= 8'h15;
+		// move const 5 to RC
+		inst <= 8'b00010_101;
 		@(negedge clk);
 
-		// move C to r0
-		inst <= 8'h08;
+		// move RC to R0
+		inst <= 8'b00011_000;
 		@(negedge clk);
 
-		// move r0 to C
-		inst <= 8'h00;
+		// move R0 to RC
+		inst <= 8'b0001_000;
 		@(negedge clk);
 
-		// move C to r1
-		inst <= 8'h09;
+		// move RC to R1
+		inst <= 8'b00011_001;
 		@(negedge clk);
 
-		// NOT r1
-		inst <= 8'h31;
+		// NOT R1
+		inst <= 8'b00111_001;
 		@(negedge clk);
 
-		// move C to r2
-		inst <= 8'h0A;
+		// move RC to R2
+		inst <= 8'b00011_010;
 		@(negedge clk);
+
+		$finish;
 	end
 
 endmodule
