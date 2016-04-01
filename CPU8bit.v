@@ -1,9 +1,10 @@
 // CPU8bit.v
 // John Wilkes
 
-module CPU(input clk, rst);
+module CPU(input clk, rst,
+           input [7:0] memVal,
+           output [7:0] memAddr);
 
-	wire [7:0] inst; // instruction
     wire [7:0] bus; // data bus
 	wire [2:0] regSel, aluSel;
 	wire Rin, Rout, RAin, RCout, genConst;
@@ -11,7 +12,7 @@ module CPU(input clk, rst);
 
     /*** Control Unit ***/
 
-	ControlUnit cu(rst, inst, regSel, aluSel, Rin, Rout, RAin, RCout, genConst);
+	ControlUnit cu(clk, rst, memVal, memAddr, regSel, aluSel, Rin, Rout, RAin, RCout, genConst);
 
 
     /*** General Purpose Registers ***/

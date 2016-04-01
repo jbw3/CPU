@@ -35,7 +35,13 @@
 // 11110
 // 11111
 
-module ControlUnit(input rst, input [7:0] inst, output [2:0] regSel, output reg [2:0] aluSel, output Rin, Rout, RAin, RCout, genConst);
+module ControlUnit(input clk,
+                   input rst,
+                   input [7:0] memVal,
+                   output [7:0] memAddr,
+                   output [2:0] regSel,
+                   output reg [2:0] aluSel,
+                   output Rin, Rout, RAin, RCout, genConst);
 
     wire [31:0] opNum;
     assign instNop        = opNum[ 0];
@@ -48,7 +54,9 @@ module ControlUnit(input rst, input [7:0] inst, output [2:0] regSel, output reg 
     assign instOr         = opNum[ 9];
     assign instXor        = opNum[10];
 
-    Decoder5to32 iDec(inst[7:3], opNum);
+    ProgramCounter pc(clk, rst, memAddr);
+
+    Decoder5to32 iDec(memVal[7:3], opNum);
 
     // register control signals
     assign Rin   = ~rst & instMovRCReg;
@@ -56,12 +64,12 @@ module ControlUnit(input rst, input [7:0] inst, output [2:0] regSel, output reg 
     assign RAin  = ~rst & instMovRegRA;
     assign RCout = ~rst & instMovRCReg;
 
-    assign regSel = {~rst, ~rst, ~rst} & inst[2:0];
+    assign regSel = {~rst, ~rst, ~rst} & memVal[2:0];
     assign genConst = ~rst & instMovConstRC;
 
-    always @(inst) begin
+    always @(memVal) begin
         // select ALU functionality
-        case (inst[7:3])
+        case (memVal[7:3])
              7: aluSel <= 3'b001;
              8: aluSel <= 3'b010;
              9: aluSel <= 3'b011;

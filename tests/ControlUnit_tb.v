@@ -5,13 +5,15 @@
 
 module ControlUnit_tb;
 
+    reg clk;
     reg rst;
     reg [7:0] inst;
+    wire [7:0] memAddr;
     wire [2:0] regSel;
     wire [2:0] aluSel;
     wire Rin, Rout, RAin, RCout, genConst;
 
-    ControlUnit ctrlUnit (rst, inst, regSel, aluSel, Rin, Rout, RAin, RCout, genConst);
+    ControlUnit ctrlUnit (clk, rst, inst, memAddr, regSel, aluSel, Rin, Rout, RAin, RCout, genConst);
 
     initial begin
         $dumpfile("ControlUnit.vcd");

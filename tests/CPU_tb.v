@@ -3,12 +3,12 @@
 
 module CPU_tb;
 
-	reg [7:0] inst; // instruction
 	reg clk, rst;
-	CPU cpu(clk, rst);
+	wire [7:0] memAddr;
+	wire [7:0] memVal;
 
-	// temporary until we read instructions from memory
-	assign cpu.inst = inst;
+	CPU cpu(clk, rst, memVal, memAddr);
+	Memory mem("mem.txt", memAddr, memVal);
 
 	initial begin
 		$dumpfile("CPU.vcd");
@@ -16,7 +16,6 @@ module CPU_tb;
 
 		clk = 1'b0;
 		rst = 1'b1;
-		inst = 8'h00;
 	end
 
 	always begin
@@ -28,27 +27,26 @@ module CPU_tb;
 		rst = 0;
 
 		// move const 5 to RC
-		inst <= 8'b00010_101;
 		@(negedge clk);
 
 		// move RC to R0
-		inst <= 8'b00011_000;
 		@(negedge clk);
 
 		// move R0 to RC
-		inst <= 8'b0001_000;
 		@(negedge clk);
 
 		// move RC to R1
-		inst <= 8'b00011_001;
 		@(negedge clk);
 
 		// NOT R1
-		inst <= 8'b00111_001;
 		@(negedge clk);
 
 		// move RC to R2
-		inst <= 8'b00011_010;
+		@(negedge clk);
+
+		@(negedge clk);
+		@(negedge clk);
+		@(negedge clk);
 		@(negedge clk);
 
 		$finish;
