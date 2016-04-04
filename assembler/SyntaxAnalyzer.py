@@ -12,18 +12,20 @@ class SyntaxAnalyzer(object):
         for token in tokens:
             # a newline token denotes the end of an assembly expression
             if token == '\n':
-                keyword = expression[0]
+                kwName = expression[0]
 
                 # check if the first token in the expression is a valid keyword
-                if keyword not in syntax.KEYWORDS.keys():
+                if kwName not in syntax.KEYWORDS.keys():
                     print('ERROR: "{}" is not a valid keyword'.format(expression[0]))
                     return False
 
+                kw = syntax.KEYWORDS[kwName]
+
                 # check if the keyword has the right number of arguments
                 numArgs = len(expression) - 1
-                expectedArgs = syntax.KEYWORDS[keyword].numArgs
+                expectedArgs = kw.numArgs
                 if numArgs != expectedArgs:
-                    print('ERROR: "{}" expects {} argument{}, got {}'.format(keyword,
+                    print('ERROR: "{}" expects {} argument{}, got {}'.format(kwName,
                                                                              expectedArgs,
                                                                              '' if expectedArgs == 1 else 's',
                                                                              numArgs))
@@ -32,9 +34,21 @@ class SyntaxAnalyzer(object):
                 # check the argument
                 if numArgs == 1:
                     arg = expression[1]
-                    if re.search('^R[0-7]$', arg) is None:
+                    if kw.argType == syntax.Keyword.ARG_TYPE_REG and re.search('^R[0-7]$', arg) is None:
                         print('ERROR: invalid register "{}"'.format(arg))
                         return False
+                    elif kw.argType == syntax.Keyword.ARG_TYPE_CONST:
+                        try:
+                            c = int(arg)
+                        except ValueError:
+                            print('ERROR: constant value "{}" is not a number'.format(arg))
+                            return False
+                        else:
+                            if c < syntax.MIN_CONST or c > syntax.MAX_CONST:
+                                print('ERROR: constant value "{}" is outside the valid range ({} - {})'.format(arg,
+                                                                                                               syntax.MIN_CONST,
+                                                                                                               syntax.MAX_CONST))
+                                return False
 
                 self._expressions.append(expression)
                 expression = []
