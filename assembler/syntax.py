@@ -23,4 +23,8 @@ KEYWORDS = {
     # 'ST': 0b00110, (not implemented)
     'NOT':   Keyword('NOT',   0b00111, 1, Keyword.ARG_TYPE_REG), # not
     'AND':   Keyword('AND',   0b01000, 1, Keyword.ARG_TYPE_REG), # and
+    'OR':    Keyword('OR',    0b01001, 1, Keyword.ARG_TYPE_REG), # or
+    'XOR':   Keyword('XOR',   0b01010, 1, Keyword.ARG_TYPE_REG), # xor
+    'ADD':   Keyword('ADD',   0b01011, 1, Keyword.ARG_TYPE_REG), # add
+    'SUB':   Keyword('SUB',   0b01100, 1, Keyword.ARG_TYPE_REG), # sub
 }

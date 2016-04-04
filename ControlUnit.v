@@ -13,7 +13,7 @@
 // 01000 and
 // 01001 or
 // 01010 xor
-// 01011 add (not implemented)
+// 01011 add
 // 01100 sub (not implemented)
 // 01101 inc (not implemented)
 // 01110
@@ -53,6 +53,8 @@ module ControlUnit(input clk,
     assign instAnd        = opNum[ 8];
     assign instOr         = opNum[ 9];
     assign instXor        = opNum[10];
+    assign instAdd        = opNum[11];
+    assign instSub        = opNum[12];
 
     ProgramCounter pc(clk, rst, memAddr);
 
@@ -60,7 +62,7 @@ module ControlUnit(input clk,
 
     // register control signals
     assign Rin   = ~rst & instMovRCReg;
-    assign Rout  = ~rst & (instMovRegRC | instMovRegRA | instNot | instAnd | instOr | instXor);
+    assign Rout  = ~rst & (instMovRegRC | instMovRegRA | instNot | instAnd | instOr | instXor | instAdd | instSub);
     assign RAin  = ~rst & instMovRegRA;
     assign RCout = ~rst & instMovRCReg;
 
@@ -74,6 +76,8 @@ module ControlUnit(input clk,
              8: aluSel <= 3'b010;
              9: aluSel <= 3'b011;
             10: aluSel <= 3'b100;
+            11: aluSel <= 3'b101;
+            12: aluSel <= 3'b110;
             default: aluSel <= 3'b000;
         endcase
     end
