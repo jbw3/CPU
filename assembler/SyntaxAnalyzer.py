@@ -12,20 +12,20 @@ class SyntaxAnalyzer(object):
         for token in tokens:
             # a newline token denotes the end of an assembly expression
             if token == '\n':
-                kwName = expression[0]
+                insName = expression[0]
 
-                # check if the first token in the expression is a valid keyword
-                if kwName not in syntax.KEYWORDS.keys():
-                    print('ERROR: "{}" is not a valid keyword'.format(expression[0]))
+                # check if the first token in the expression is a valid instruction
+                if insName not in syntax.INSTRUCTIONS.keys():
+                    print('ERROR: "{}" is not a valid instruction'.format(expression[0]))
                     return False
 
-                kw = syntax.KEYWORDS[kwName]
+                ins = syntax.INSTRUCTIONS[insName]
 
-                # check if the keyword has the right number of arguments
+                # check if the instruction has the right number of arguments
                 numArgs = len(expression) - 1
-                expectedArgs = kw.numArgs
+                expectedArgs = ins.numArgs
                 if numArgs != expectedArgs:
-                    print('ERROR: "{}" expects {} argument{}, got {}'.format(kwName,
+                    print('ERROR: "{}" expects {} argument{}, got {}'.format(insName,
                                                                              expectedArgs,
                                                                              '' if expectedArgs == 1 else 's',
                                                                              numArgs))
@@ -34,10 +34,10 @@ class SyntaxAnalyzer(object):
                 # check the argument
                 if numArgs == 1:
                     arg = expression[1]
-                    if kw.argType == syntax.Keyword.ARG_TYPE_REG and re.search('^R[0-7]$', arg) is None:
+                    if ins.argType == syntax.Instruction.ARG_TYPE_REG and re.search('^R[0-7]$', arg) is None:
                         print('ERROR: invalid register "{}"'.format(arg))
                         return False
-                    elif kw.argType == syntax.Keyword.ARG_TYPE_CONST:
+                    elif ins.argType == syntax.Instruction.ARG_TYPE_CONST:
                         try:
                             c = int(arg)
                         except ValueError:

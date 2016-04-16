@@ -1,7 +1,9 @@
+# Instruction set definition for 8-bit CPU
+
 MIN_CONST = 0
 MAX_CONST = 7
 
-class Keyword(object):
+class Instruction(object):
     ARG_TYPE_NONE  = 0
     ARG_TYPE_REG   = 1
     ARG_TYPE_CONST = 2
@@ -12,19 +14,19 @@ class Keyword(object):
         self.numArgs = numArgs
         self.argType = argType
 
-# mapping of keywords to op codes
-KEYWORDS = {
-    'NOP':   Keyword('NOP',   0b00000, 0, Keyword.ARG_TYPE_NONE), # no operation
-    'MVRRC': Keyword('MVRRC', 0b00001, 1, Keyword.ARG_TYPE_REG), # move register to RC
-    'MVCRC': Keyword('MVCRC', 0b00010, 1, Keyword.ARG_TYPE_CONST), # move constant to RC
-    'MVRCR': Keyword('MVRCR', 0b00011, 1, Keyword.ARG_TYPE_REG), # move RC to register
-    'MVRRA': Keyword('MVRRA', 0b00100, 1, Keyword.ARG_TYPE_REG), # move register to RA
+# mapping of instructions to op codes
+INSTRUCTIONS = {
+    'NOP':   Instruction('NOP',   0b00000, 0, Instruction.ARG_TYPE_NONE), # no operation
+    'MVRRC': Instruction('MVRRC', 0b00001, 1, Instruction.ARG_TYPE_REG), # move register to RC
+    'MVCRC': Instruction('MVCRC', 0b00010, 1, Instruction.ARG_TYPE_CONST), # move constant to RC
+    'MVRCR': Instruction('MVRCR', 0b00011, 1, Instruction.ARG_TYPE_REG), # move RC to register
+    'MVRRA': Instruction('MVRRA', 0b00100, 1, Instruction.ARG_TYPE_REG), # move register to RA
     # 'LD': 0b00101, (not implemented)
     # 'ST': 0b00110, (not implemented)
-    'NOT':   Keyword('NOT',   0b00111, 1, Keyword.ARG_TYPE_REG), # not
-    'AND':   Keyword('AND',   0b01000, 1, Keyword.ARG_TYPE_REG), # and
-    'OR':    Keyword('OR',    0b01001, 1, Keyword.ARG_TYPE_REG), # or
-    'XOR':   Keyword('XOR',   0b01010, 1, Keyword.ARG_TYPE_REG), # xor
-    'ADD':   Keyword('ADD',   0b01011, 1, Keyword.ARG_TYPE_REG), # add
-    'SUB':   Keyword('SUB',   0b01100, 1, Keyword.ARG_TYPE_REG), # sub
+    'NOT':   Instruction('NOT',   0b00111, 1, Instruction.ARG_TYPE_REG), # not
+    'AND':   Instruction('AND',   0b01000, 1, Instruction.ARG_TYPE_REG), # and
+    'OR':    Instruction('OR',    0b01001, 1, Instruction.ARG_TYPE_REG), # or
+    'XOR':   Instruction('XOR',   0b01010, 1, Instruction.ARG_TYPE_REG), # xor
+    'ADD':   Instruction('ADD',   0b01011, 1, Instruction.ARG_TYPE_REG), # add
+    'SUB':   Instruction('SUB',   0b01100, 1, Instruction.ARG_TYPE_REG), # sub
 }

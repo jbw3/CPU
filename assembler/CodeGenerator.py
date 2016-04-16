@@ -9,12 +9,12 @@ class CodeGenerator(object):
             symbolCount = 0
 
             for exp in expressions:
-                # look up keyword
-                kw = syntax.KEYWORDS[exp[0]]
+                # look up instruction
+                ins = syntax.INSTRUCTIONS[exp[0]]
 
-                symbolBin = kw.opCode << 3
-                if kw.numArgs == 1:
-                    argNum = self.processArg(kw, exp[1])
+                symbolBin = ins.opCode << 3
+                if ins.numArgs == 1:
+                    argNum = self.processArg(ins, exp[1])
                     symbolBin |= argNum
 
                 # convert symbol from binary to string
@@ -30,14 +30,14 @@ class CodeGenerator(object):
                 f.write('00\n')
                 symbolCount += 1
 
-    def processArg(self, kw, arg):
-        if kw.argType == syntax.Keyword.ARG_TYPE_REG:
+    def processArg(self, ins, arg):
+        if ins.argType == syntax.Instruction.ARG_TYPE_REG:
             # get the register number
             reg = arg
             regNum = int(reg[1])
             return regNum
 
-        elif kw.argType == syntax.Keyword.ARG_TYPE_CONST:
+        elif ins.argType == syntax.Instruction.ARG_TYPE_CONST:
             return int(arg)
 
         # we should never get here
