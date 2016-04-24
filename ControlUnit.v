@@ -3,10 +3,10 @@
 
 // Instruction set:
 // 00000 NOP
-// 00001 move reg to RC
-// 00010 move const to RC
-// 00011 move RC to reg
-// 00100 move reg to RA
+// 00001 move reg to R0
+// 00010 move const to R0
+// 00011 move R0 to reg
+// 00100
 // 00101 load from memory (not implemented)
 // 00110 store to memory (not implemented)
 // 00111 not
@@ -14,7 +14,7 @@
 // 01001 or
 // 01010 xor
 // 01011 add
-// 01100 sub (not implemented)
+// 01100 sub
 // 01101 inc (not implemented)
 // 01110
 // 01111
@@ -39,16 +39,19 @@ module ControlUnit(input clk,
                    input rst,
                    input [7:0] memVal,
                    output [7:0] memAddr,
-                   output [2:0] regSel,
                    output reg [2:0] aluSel,
-                   output Rin, Rout, RAin, RCout, genConst);
+                   output reg [2:0] regInSel,
+                   output reg [2:0] regOutSel,
+                   output regInEn,
+                   output regOutEn,
+                   output genConst);
 
     wire [31:0] opNum;
     assign instNop        = opNum[ 0];
-    assign instMovRegRC   = opNum[ 1];
-    assign instMovConstRC = opNum[ 2];
-    assign instMovRCReg   = opNum[ 3];
-    assign instMovRegRA   = opNum[ 4];
+    assign instMovRxR0    = opNum[ 1];
+    assign instMovConstR0 = opNum[ 2];
+    assign instMovR0Rx    = opNum[ 3];
+    // assign instMovRegRA   = opNum[ 4];
     assign instNot        = opNum[ 7];
     assign instAnd        = opNum[ 8];
     assign instOr         = opNum[ 9];
@@ -61,15 +64,34 @@ module ControlUnit(input clk,
     Decoder5to32 iDec(memVal[7:3], opNum);
 
     // register control signals
-    assign Rin   = ~rst & instMovRCReg;
-    assign Rout  = ~rst & (instMovRegRC | instMovRegRA | instNot | instAnd | instOr | instXor | instAdd | instSub);
-    assign RAin  = ~rst & instMovRegRA;
-    assign RCout = ~rst & instMovRCReg;
+    assign regInEn  = ~rst & (instMovRxR0 | instMovConstR0 | instMovR0Rx);
+    assign regOutEn = ~rst & (instMovRxR0 | instNot | instAnd | instOr | instXor | instAdd | instSub);
 
-    assign regSel = {~rst, ~rst, ~rst} & memVal[2:0];
-    assign genConst = ~rst & instMovConstRC;
+    assign genConst = ~rst & instMovConstR0;
 
-    always @(memVal) begin
+    always @(rst, memVal, instMovR0Rx) begin
+        // select register in
+        if (rst == 1) begin
+            regInSel <= 3'b000;
+        end
+        else if (instMovR0Rx) begin
+            regInSel <= memVal[2:0];
+        end
+        else begin
+            regInSel <= 3'b000;
+        end
+
+        // select register out
+        if (rst == 1) begin
+            regOutSel <= 3'b000;
+        end
+        else if (instMovR0Rx) begin
+            regOutSel <= 3'b000;
+        end
+        else begin
+            regOutSel <= memVal[2:0];
+        end
+
         // select ALU functionality
         case (memVal[7:3])
              7: aluSel <= 3'b001;

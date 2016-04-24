@@ -19,7 +19,7 @@ module Register(input clk, rst, en, input [7:0] I, output reg [7:0] O);
         if (rst) begin
             O <= 8'h00;
         end
-        else if (en) begin
+        else begin
             O <= internal;
         end
     end

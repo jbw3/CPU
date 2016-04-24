@@ -5,37 +5,34 @@ module CPU(input clk, rst,
            input [7:0] memVal,
            output [7:0] memAddr);
 
-    wire [7:0] bus; // data bus
-	wire [2:0] regSel, aluSel;
-	wire Rin, Rout, RAin, RCout, genConst;
+    wire [7:0] dataA, dataB, dataC; // data buses
+	wire [2:0] aluSel, rInSel, rOutSel;
+	wire rInEn, rOutEn, genConst;
 
 
     /*** Control Unit ***/
 
-	ControlUnit cu(clk, rst, memVal, memAddr, regSel, aluSel, Rin, Rout, RAin, RCout, genConst);
+	ControlUnit cu(clk, rst, memVal, memAddr, aluSel, rInSel, rOutSel, rInEn, rOutEn, genConst);
 
 
     /*** General Purpose Registers ***/
 
-    GPRegisters regs(clk, rst, regSel, Rin, Rout, bus);
+    GPRegisters regs(clk, rst, rInSel, rOutSel,
+                     rInEn,
+                     rOutEn,
+                     dataC,  // rIn
+                     dataB,  // rOut
+                     dataA); // r0Out
 
 
     /*** Constant Generator ***/
 
-    // the const is passed thru the regSel bus
-    TriState tConst(genConst, {5'b00000, regSel}, bus);
+    // the const is passed thru the rOutSel bus
+    TriState tConst(genConst, {5'b00000, rOutSel}, dataB);
 
 
     /*** ALU ***/
 
-    wire [7:0] raOut, rcIn, rcOut;
-
-    // registers for ALU input and output
-    Register ra(clk, rst, RAin, bus, raOut);
-    Register rc(clk, rst, 1'b1, rcIn, rcOut);
-
-    TriState tc(RCout, rcOut, bus);
-
-    ALU8bit ALU(aluSel, raOut, bus, rcIn);
+    ALU8bit ALU(aluSel, dataA, dataB, dataC);
 
 endmodule
