@@ -23,7 +23,8 @@ module CPU_tb;
 	end
 
 	initial begin
-		@(negedge clk);
+		// @(negedge clk);
+		#6
 		rst = 0;
 
 		// move const 5 to RC

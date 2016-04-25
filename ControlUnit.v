@@ -64,8 +64,8 @@ module ControlUnit(input clk,
     Decoder5to32 iDec(memVal[7:3], opNum);
 
     // register control signals
-    assign regInEn  = ~rst & (instMovRxR0 | instMovConstR0 | instMovR0Rx);
-    assign regOutEn = ~rst & (instMovRxR0 | instNot | instAnd | instOr | instXor | instAdd | instSub);
+    assign regInEn  = ~rst & (instMovRxR0 | instMovConstR0 | instMovR0Rx | instNot | instAnd | instOr | instXor | instAdd | instSub);
+    assign regOutEn = ~rst & (instMovRxR0 | instMovR0Rx | instNot | instAnd | instOr | instXor | instAdd | instSub);
 
     assign genConst = ~rst & instMovConstR0;
 
