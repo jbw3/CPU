@@ -17,10 +17,10 @@ class Instruction(object):
 # mapping of instructions to op codes
 INSTRUCTIONS = {
     'NOP':   Instruction('NOP',   0b00000, 0, Instruction.ARG_TYPE_NONE), # no operation
-    'MVRRC': Instruction('MVRRC', 0b00001, 1, Instruction.ARG_TYPE_REG), # move register to RC
-    'MVCRC': Instruction('MVCRC', 0b00010, 1, Instruction.ARG_TYPE_CONST), # move constant to RC
-    'MVRCR': Instruction('MVRCR', 0b00011, 1, Instruction.ARG_TYPE_REG), # move RC to register
-    'MVRRA': Instruction('MVRRA', 0b00100, 1, Instruction.ARG_TYPE_REG), # move register to RA
+    'MVRX': Instruction('MVRX', 0b00001, 1, Instruction.ARG_TYPE_REG), # move register to R0
+    'MVC': Instruction('MVC', 0b00010, 1, Instruction.ARG_TYPE_CONST), # move constant to R0
+    'MVR0': Instruction('MVR0', 0b00011, 1, Instruction.ARG_TYPE_REG), # move R0 to register
+    # 'MVRRA': Instruction('MVRRA', 0b00100, 1, Instruction.ARG_TYPE_REG), # move register to RA
     # 'LD': 0b00101, (not implemented)
     # 'ST': 0b00110, (not implemented)
     'NOT':   Instruction('NOT',   0b00111, 1, Instruction.ARG_TYPE_REG), # not
