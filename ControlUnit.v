@@ -2,20 +2,20 @@
 // John Wilkes
 
 // Instruction set:
-// 00000 NOP
+// 00000 nop
 // 00001 move reg to R0
 // 00010 move const to R0
 // 00011 move R0 to reg
-// 00100
-// 00101 load from memory (not implemented)
-// 00110 store to memory (not implemented)
-// 00111 not
-// 01000 and
-// 01001 or
-// 01010 xor
-// 01011 add
-// 01100 sub
-// 01101 inc (not implemented)
+// 00100 not
+// 00101 and
+// 00110 or
+// 00111 xor
+// 01000 add
+// 01001 sub
+// 01010
+// 01011
+// 01100
+// 01101
 // 01110
 // 01111
 // 10000
@@ -51,13 +51,12 @@ module ControlUnit(input clk,
     assign instMovRxR0    = opNum[ 1];
     assign instMovConstR0 = opNum[ 2];
     assign instMovR0Rx    = opNum[ 3];
-    // assign instMovRegRA   = opNum[ 4];
-    assign instNot        = opNum[ 7];
-    assign instAnd        = opNum[ 8];
-    assign instOr         = opNum[ 9];
-    assign instXor        = opNum[10];
-    assign instAdd        = opNum[11];
-    assign instSub        = opNum[12];
+    assign instNot        = opNum[ 4];
+    assign instAnd        = opNum[ 5];
+    assign instOr         = opNum[ 6];
+    assign instXor        = opNum[ 7];
+    assign instAdd        = opNum[ 8];
+    assign instSub        = opNum[ 9];
 
     ProgramCounter pc(clk, rst, memAddr);
 
@@ -94,12 +93,12 @@ module ControlUnit(input clk,
 
         // select ALU functionality
         case (memVal[7:3])
-             7: aluSel <= 3'b001;
-             8: aluSel <= 3'b010;
-             9: aluSel <= 3'b011;
-            10: aluSel <= 3'b100;
-            11: aluSel <= 3'b101;
-            12: aluSel <= 3'b110;
+            4: aluSel <= 3'b001; // not
+            5: aluSel <= 3'b010; // and
+            6: aluSel <= 3'b011; // or
+            7: aluSel <= 3'b100; // xor
+            8: aluSel <= 3'b101; // add
+            9: aluSel <= 3'b110; // subtract
             default: aluSel <= 3'b000;
         endcase
     end
