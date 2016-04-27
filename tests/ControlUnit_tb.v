@@ -7,7 +7,8 @@ module ControlUnit_tb;
 
     reg rst;
     reg [7:0] inst;
-    wire [2:0] aluSel, regInSel, regOutSel;
+    wire [3:0] aluSel;
+    wire [2:0] regInSel, regOutSel;
     wire regInEn, regOutEn, genConst;
 
     ControlUnit ctrlUnit (rst, inst, aluSel, regInSel, regOutSel,
@@ -22,7 +23,7 @@ module ControlUnit_tb;
         rst <= 1;
         inst <= 8'hFF;
         # 1
-        `ASSERT(aluSel == 3'b000)
+        `ASSERT(aluSel == 4'b0000)
         `ASSERT(regInSel == 3'b000)
         `ASSERT(regOutSel == 3'b000)
         `ASSERT(regInEn == 0)
@@ -35,7 +36,7 @@ module ControlUnit_tb;
         # 4
         inst <= 8'h00;
         # 1
-        `ASSERT(aluSel == 3'b000)
+        `ASSERT(aluSel == 4'b0000)
         `ASSERT(regInSel == 3'b000)
         `ASSERT(regOutSel == 3'b000)
         `ASSERT(regInEn == 0)
@@ -46,7 +47,7 @@ module ControlUnit_tb;
         # 4
         inst <= 8'b00001_011;
         # 1
-        `ASSERT(aluSel == 3'b000)
+        `ASSERT(aluSel == 4'b0000)
         `ASSERT(regInSel == 3'b000)
         `ASSERT(regOutSel == 3'b011)
         `ASSERT(regInEn == 1)
