@@ -26,4 +26,7 @@ INSTRUCTIONS = {
     'XOR':   Instruction('XOR',  0b00111, 1, Instruction.ARG_TYPE_REG), # xor
     'ADD':   Instruction('ADD',  0b01000, 1, Instruction.ARG_TYPE_REG), # add
     'SUB':   Instruction('SUB',  0b01001, 1, Instruction.ARG_TYPE_REG), # sub
+    'SHLL':  Instruction('SHLL', 0b01010, 1, Instruction.ARG_TYPE_REG), # shift left logical
+    'SHRL':  Instruction('SHRL', 0b01011, 1, Instruction.ARG_TYPE_REG), # shift right logical
+    'SHRA':  Instruction('SHRA', 0b01100, 1, Instruction.ARG_TYPE_REG), # shift right arithmetic
 }

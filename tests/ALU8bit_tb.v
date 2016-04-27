@@ -5,7 +5,7 @@
 
 module ALU8bit_tb;
 
-    reg [2:0] sel;
+    reg [3:0] sel;
     reg [7:0] A, B;
     wire [7:0] C;
 
@@ -17,7 +17,7 @@ module ALU8bit_tb;
 
         // pass B through
         # 0
-        sel <= 3'b000;
+        sel <= 4'b0000;
         A <= 8'd3;
         B <= 8'd12;
         # 1
@@ -25,7 +25,7 @@ module ALU8bit_tb;
 
         // NOT
         # 4
-        sel <= 3'b001;
+        sel <= 4'b0001;
         A <= 8'd3;
         B <= 8'd12;
         # 1
@@ -33,7 +33,7 @@ module ALU8bit_tb;
 
         // AND
         # 4
-        sel <= 3'b010;
+        sel <= 4'b0010;
         A <= 8'hF3;
         B <= 8'h25;
         # 1
@@ -41,7 +41,7 @@ module ALU8bit_tb;
 
         // OR
         # 4
-        sel <= 3'b011;
+        sel <= 4'b0011;
         A <= 8'h73;
         B <= 8'h8B;
         # 1
@@ -49,11 +49,35 @@ module ALU8bit_tb;
 
         // XOR
         # 4
-        sel <= 3'b100;
+        sel <= 4'b0100;
         A <= 8'hA3;
         B <= 8'h45;
         # 1
         `ASSERT(C == (A ^ B))
+
+        // left shift
+        # 4
+        sel <= 4'b0111;
+        A <= 8'hA3;
+        B <= 8'h02;
+        # 1
+        `ASSERT(C == 8'h8C)
+
+        // right shift logical
+        # 4
+        sel <= 4'b1000;
+        A <= 8'hA3;
+        B <= 8'h02;
+        # 1
+        `ASSERT(C == 8'h28)
+
+        // right shift arithmetic
+        # 4
+        sel <= 4'b1001;
+        A <= 8'hA3;
+        B <= 8'h02;
+        # 1
+        `ASSERT(C == 8'hE8)
 
         # 4
         $display("PASSED");

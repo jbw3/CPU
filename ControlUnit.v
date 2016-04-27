@@ -39,7 +39,7 @@ module ControlUnit(input clk,
                    input rst,
                    input [7:0] memVal,
                    output [7:0] memAddr,
-                   output reg [2:0] aluSel,
+                   output reg [3:0] aluSel,
                    output reg [2:0] regInSel,
                    output reg [2:0] regOutSel,
                    output regInEn,
@@ -47,33 +47,36 @@ module ControlUnit(input clk,
                    output genConst);
 
     wire [31:0] opNum;
-    assign instNop        = opNum[ 0];
-    assign instMovRxR0    = opNum[ 1];
-    assign instMovConstR0 = opNum[ 2];
-    assign instMovR0Rx    = opNum[ 3];
-    assign instNot        = opNum[ 4];
-    assign instAnd        = opNum[ 5];
-    assign instOr         = opNum[ 6];
-    assign instXor        = opNum[ 7];
-    assign instAdd        = opNum[ 8];
-    assign instSub        = opNum[ 9];
+    assign instNop     = opNum[ 0];
+    assign instMov     = opNum[ 1];
+    assign instMovi    = opNum[ 2];
+    assign instMvr0    = opNum[ 3];
+    assign instNot     = opNum[ 4];
+    assign instAnd     = opNum[ 5];
+    assign instOr      = opNum[ 6];
+    assign instXor     = opNum[ 7];
+    assign instAdd     = opNum[ 8];
+    assign instSub     = opNum[ 9];
+    assign instShll    = opNum[10];
+    assign instShrl    = opNum[11];
+    assign instShra    = opNum[12];
 
     ProgramCounter pc(clk, rst, memAddr);
 
     Decoder5to32 iDec(memVal[7:3], opNum);
 
     // register control signals
-    assign regInEn  = ~rst & (instMovRxR0 | instMovConstR0 | instMovR0Rx | instNot | instAnd | instOr | instXor | instAdd | instSub);
-    assign regOutEn = ~rst & (instMovRxR0 | instMovR0Rx | instNot | instAnd | instOr | instXor | instAdd | instSub);
+    assign regInEn  = ~rst & (instMov | instMovi | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra);
+    assign regOutEn = ~rst & (instMov | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra);
 
-    assign genConst = ~rst & instMovConstR0;
+    assign genConst = ~rst & instMovi;
 
-    always @(rst, memVal, instMovR0Rx) begin
+    always @(rst, memVal, instMvr0) begin
         // select register in
         if (rst == 1) begin
             regInSel <= 3'b000;
         end
-        else if (instMovR0Rx) begin
+        else if (instMvr0) begin
             regInSel <= memVal[2:0];
         end
         else begin
@@ -84,7 +87,7 @@ module ControlUnit(input clk,
         if (rst == 1) begin
             regOutSel <= 3'b000;
         end
-        else if (instMovR0Rx) begin
+        else if (instMvr0) begin
             regOutSel <= 3'b000;
         end
         else begin
@@ -93,13 +96,16 @@ module ControlUnit(input clk,
 
         // select ALU functionality
         case (memVal[7:3])
-            4: aluSel <= 3'b001; // not
-            5: aluSel <= 3'b010; // and
-            6: aluSel <= 3'b011; // or
-            7: aluSel <= 3'b100; // xor
-            8: aluSel <= 3'b101; // add
-            9: aluSel <= 3'b110; // subtract
-            default: aluSel <= 3'b000;
+             4: aluSel <= 4'b0001; // not
+             5: aluSel <= 4'b0010; // and
+             6: aluSel <= 4'b0011; // or
+             7: aluSel <= 4'b0100; // xor
+             8: aluSel <= 4'b0101; // add
+             9: aluSel <= 4'b0110; // subtract
+            10: aluSel <= 4'b0111; // shift left logical
+            11: aluSel <= 4'b1000; // shift right logical
+            12: aluSel <= 4'b1001; // shift right arithmetic
+            default: aluSel <= 4'b0000;
         endcase
     end
 

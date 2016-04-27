@@ -6,7 +6,8 @@ module CPU(input clk, rst,
            output [7:0] memAddr);
 
     wire [7:0] dataA, dataB, dataC; // data buses
-	wire [2:0] aluSel, rInSel, rOutSel;
+    wire [3:0] aluSel;
+	wire [2:0] rInSel, rOutSel;
 	wire rInEn, rOutEn, genConst;
 
 

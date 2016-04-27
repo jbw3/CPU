@@ -1,7 +1,7 @@
 // ALU8bit.v
 // John Wilkes
 
-module ALU8bit(input [2:0] sel, input [7:0] A, B, output reg [7:0] C);
+module ALU8bit(input [3:0] sel, input signed [7:0] A, B, output reg signed [7:0] C);
 
     wire [7:0] A1;
     wire [7:0] A2;
@@ -31,6 +31,12 @@ module ALU8bit(input [2:0] sel, input [7:0] A, B, output reg [7:0] C);
                 C <= sum;
             6: // SUB
                 C <= sum;
+            7: // left shift
+                C <= A << B;
+            8: // right shift logical
+                C <= A >> B;
+            9: // right shift arithmetic
+                C <= A >>> B;
             default: C <= B;
         endcase
     end // always
