@@ -5,14 +5,12 @@
 
 module ControlUnit_tb;
 
-    reg clk;
     reg rst;
     reg [7:0] inst;
-    wire [7:0] memAddr;
     wire [2:0] aluSel, regInSel, regOutSel;
     wire regInEn, regOutEn, genConst;
 
-    ControlUnit ctrlUnit (clk, rst, inst, memAddr, aluSel, regInSel, regOutSel,
+    ControlUnit ctrlUnit (rst, inst, aluSel, regInSel, regOutSel,
                           regInEn, regOutEn, genConst);
 
     initial begin

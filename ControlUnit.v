@@ -35,10 +35,8 @@
 // 11110
 // 11111
 
-module ControlUnit(input clk,
-                   input rst,
-                   input [7:0] memVal,
-                   output [7:0] memAddr,
+module ControlUnit(input rst,
+                   input [7:0] inst,
                    output reg [3:0] aluSel,
                    output reg [2:0] regInSel,
                    output reg [2:0] regOutSel,
@@ -61,9 +59,7 @@ module ControlUnit(input clk,
     assign instShrl    = opNum[11];
     assign instShra    = opNum[12];
 
-    ProgramCounter pc(clk, rst, memAddr);
-
-    Decoder5to32 iDec(memVal[7:3], opNum);
+    Decoder5to32 iDec(inst[7:3], opNum);
 
     // register control signals
     assign regInEn  = ~rst & (instMov | instMovi | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra);
@@ -71,13 +67,13 @@ module ControlUnit(input clk,
 
     assign genConst = ~rst & instMovi;
 
-    always @(rst, memVal, instMvr0) begin
+    always @(rst, inst, instMvr0) begin
         // select register in
         if (rst == 1) begin
             regInSel <= 3'b000;
         end
         else if (instMvr0) begin
-            regInSel <= memVal[2:0];
+            regInSel <= inst[2:0];
         end
         else begin
             regInSel <= 3'b000;
@@ -91,11 +87,11 @@ module ControlUnit(input clk,
             regOutSel <= 3'b000;
         end
         else begin
-            regOutSel <= memVal[2:0];
+            regOutSel <= inst[2:0];
         end
 
         // select ALU functionality
-        case (memVal[7:3])
+        case (inst[7:3])
              4: aluSel <= 4'b0001; // not
              5: aluSel <= 4'b0010; // and
              6: aluSel <= 4'b0011; // or

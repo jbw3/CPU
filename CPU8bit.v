@@ -10,10 +10,13 @@ module CPU(input clk, rst,
 	wire [2:0] rInSel, rOutSel;
 	wire rInEn, rOutEn, genConst;
 
+    /*** Program Counter ***/
+    ProgramCounter pc(clk, rst, memAddr);
+
 
     /*** Control Unit ***/
 
-	ControlUnit cu(clk, rst, memVal, memAddr, aluSel, rInSel, rOutSel, rInEn, rOutEn, genConst);
+	ControlUnit cu(rst, memVal, aluSel, rInSel, rOutSel, rInEn, rOutEn, genConst);
 
 
     /*** General Purpose Registers ***/
