@@ -23,33 +23,10 @@ module CPU_tb;
 	end
 
 	initial begin
-		// @(negedge clk);
 		#6
 		rst = 0;
 
-		// move const 5 to RC
-		@(negedge clk);
-
-		// move RC to R0
-		@(negedge clk);
-
-		// move R0 to RC
-		@(negedge clk);
-
-		// move RC to R1
-		@(negedge clk);
-
-		// NOT R1
-		@(negedge clk);
-
-		// move RC to R2
-		@(negedge clk);
-
-		@(negedge clk);
-		@(negedge clk);
-		@(negedge clk);
-		@(negedge clk);
-
+		#150
 		$finish;
 	end
 

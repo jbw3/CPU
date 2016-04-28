@@ -4,8 +4,16 @@
 module ProgramCounter(input clk, rst,
                       output reg [7:0] addr);
 
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
+    reg internalRst;
+
+    // external reset value will change at positive clock
+    // edge, latch value at negative clock edge
+    always @(negedge clk) begin
+        internalRst <= rst;
+    end
+
+    always @(posedge clk) begin
+        if (internalRst) begin
             // reset
             addr <= 8'h00;
         end
