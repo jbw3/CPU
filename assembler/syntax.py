@@ -29,4 +29,5 @@ INSTRUCTIONS = {
     'SHLL':  Instruction('SHLL', 0b01010, 1, Instruction.ARG_TYPE_REG), # shift left logical
     'SHRL':  Instruction('SHRL', 0b01011, 1, Instruction.ARG_TYPE_REG), # shift right logical
     'SHRA':  Instruction('SHRA', 0b01100, 1, Instruction.ARG_TYPE_REG), # shift right arithmetic
+    'JMP':   Instruction('JMP',  0b01101, 1, Instruction.ARG_TYPE_REG), # jump
 }

@@ -9,10 +9,10 @@ module ControlUnit_tb;
     reg [7:0] inst;
     wire [3:0] aluSel;
     wire [2:0] regInSel, regOutSel;
-    wire regInEn, regOutEn, genConst;
+    wire regInEn, regOutEn, genConst, loadAddr;
 
     ControlUnit ctrlUnit (rst, inst, aluSel, regInSel, regOutSel,
-                          regInEn, regOutEn, genConst);
+                          regInEn, regOutEn, genConst, loadAddr);
 
     initial begin
         $dumpfile("ControlUnit.vcd");
@@ -29,6 +29,7 @@ module ControlUnit_tb;
         `ASSERT(regInEn == 0)
         `ASSERT(regOutEn == 0)
         `ASSERT(genConst == 0)
+        `ASSERT(loadAddr == 0)
 
         rst <= 0;
 
@@ -42,6 +43,7 @@ module ControlUnit_tb;
         `ASSERT(regInEn == 0)
         `ASSERT(regOutEn == 0)
         `ASSERT(genConst == 0)
+        `ASSERT(loadAddr == 0)
 
         // move reg to R0
         # 4
@@ -53,6 +55,7 @@ module ControlUnit_tb;
         `ASSERT(regInEn == 1)
         `ASSERT(regOutEn == 1)
         `ASSERT(genConst == 0)
+        `ASSERT(loadAddr == 0)
 
         # 4
         $display("PASSED");

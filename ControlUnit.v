@@ -11,11 +11,11 @@
 // 00110 or
 // 00111 xor
 // 01000 add
-// 01001 sub
-// 01010
-// 01011
-// 01100
-// 01101
+// 01001 subtract
+// 01010 shift left logical
+// 01011 shift right logical
+// 01100 shift right arithmetic
+// 01101 jump
 // 01110
 // 01111
 // 10000
@@ -42,7 +42,8 @@ module ControlUnit(input rst,
                    output reg [2:0] regOutSel,
                    output regInEn,
                    output regOutEn,
-                   output genConst);
+                   output genConst,
+                   output loadAddr);
 
     wire [31:0] opNum;
     assign instNop     = opNum[ 0];
@@ -58,14 +59,18 @@ module ControlUnit(input rst,
     assign instShll    = opNum[10];
     assign instShrl    = opNum[11];
     assign instShra    = opNum[12];
+    assign instJmp     = opNum[13];
 
     Decoder5to32 iDec(inst[7:3], opNum);
 
     // register control signals
     assign regInEn  = ~rst & (instMov | instMovi | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra);
-    assign regOutEn = ~rst & (instMov | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra);
+    assign regOutEn = ~rst & (instMov | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra | instJmp);
 
     assign genConst = ~rst & instMovi;
+
+    // TODO: use this for jump and branch instructions
+    assign loadAddr = ~rst & instJmp;
 
     always @(rst, inst, instMvr0) begin
         // select register in

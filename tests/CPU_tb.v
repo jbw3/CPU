@@ -26,7 +26,7 @@ module CPU_tb;
 		#6
 		rst = 0;
 
-		#150
+		#250
 		$finish;
 	end
 

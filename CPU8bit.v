@@ -1,6 +1,24 @@
 // CPU8bit.v
 // John Wilkes
 
+//      ------------
+//     | Registers  |
+//     |            |
+//  +->|R0          |
+//  |  |            |
+//  |  | R0      Rx |      ------------
+//  |   ------------      |     PC     |
+//  |    |A      |B       |            |
+//  |    |       +------->|addr        |
+//  |    |       |         ------------
+//  |   _v__   __v_
+//  |   \   \_/   /
+//  |    \  ALU  /
+//  |     \_____/
+//  |        |C
+//  |        |
+//  +--------+
+
 module CPU(input clk, extRst,
            input [7:0] memVal,
            output [7:0] memAddr);
@@ -9,7 +27,7 @@ module CPU(input clk, extRst,
     wire [7:0] dataA, dataB, dataC; // data buses
     wire [3:0] aluSel;
 	wire [2:0] rInSel, rOutSel;
-	wire rInEn, rOutEn, genConst;
+	wire rInEn, rOutEn, genConst, loadAddr;
 
     // always reset immediately when the external reset
     // goes high
@@ -26,12 +44,13 @@ module CPU(input clk, extRst,
 
     /*** Program Counter ***/
 
-    ProgramCounter pc(clk, rst, memAddr);
+    ProgramCounter pc(clk, rst, loadAddr, dataB, memAddr);
 
 
     /*** Control Unit ***/
 
-	ControlUnit cu(rst, memVal, aluSel, rInSel, rOutSel, rInEn, rOutEn, genConst);
+	ControlUnit cu(rst, memVal, aluSel, rInSel, rOutSel,
+                   rInEn, rOutEn, genConst, loadAddr);
 
 
     /*** General Purpose Registers ***/
