@@ -1,7 +1,10 @@
 // ALU8bit.v
 // John Wilkes
 
-module ALU8bit(input [3:0] sel, input signed [7:0] A, B, output reg signed [7:0] C);
+module ALU8bit(input [3:0] sel,
+               input signed [7:0] A, B,
+               output reg signed [7:0] C,
+               output reg cmp);
 
     wire [7:0] A1;
     wire [7:0] A2;
@@ -15,8 +18,12 @@ module ALU8bit(input [3:0] sel, input signed [7:0] A, B, output reg signed [7:0]
 
     Adder adder(A1, A2, Cin, sum, Cout);
 
+    wire isZero, isNegative;
+    Comparator comp(A, isZero, isNegative);
+
     always @(A, B, sel, sum) begin
-        case(sel)
+
+        case (sel)
             0: // pass B
                 C <= B;
             1: // NOT
@@ -37,8 +44,26 @@ module ALU8bit(input [3:0] sel, input signed [7:0] A, B, output reg signed [7:0]
                 C <= A >> B;
             9: // right shift arithmetic
                 C <= A >>> B;
-            default: C <= B;
+            default:
+                C <= B;
         endcase
+
+        case (sel)
+            10: // equal to zero
+                cmp <= isZero;
+            11: // not equal to zero
+                cmp <= ~isZero;
+            12: // greater than zero
+                cmp <= ~isNegative & ~isZero;
+            13: // less than zero
+                cmp <= isNegative;
+            default:
+                // by default set the signal high; this makes
+                // the control unit logic easier on an
+                // unconditional jump
+                cmp <= 1'b1;
+        endcase
+
     end // always
 
 endmodule

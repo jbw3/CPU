@@ -30,4 +30,8 @@ INSTRUCTIONS = {
     'SHRL':  Instruction('SHRL', 0b01011, 1, Instruction.ARG_TYPE_REG), # shift right logical
     'SHRA':  Instruction('SHRA', 0b01100, 1, Instruction.ARG_TYPE_REG), # shift right arithmetic
     'JMP':   Instruction('JMP',  0b01101, 1, Instruction.ARG_TYPE_REG), # jump
+    'BEZ':   Instruction('BEZ',  0b01110, 1, Instruction.ARG_TYPE_REG), # branch equal zero
+    'BNEZ':  Instruction('BNEZ', 0b01111, 1, Instruction.ARG_TYPE_REG), # branch not equal zero
+    'BGTZ':  Instruction('BGTZ', 0b10000, 1, Instruction.ARG_TYPE_REG), # branch greater than zero
+    'BLTZ':  Instruction('BLTZ', 0b10001, 1, Instruction.ARG_TYPE_REG), # branch less than zero
 }

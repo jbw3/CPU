@@ -8,8 +8,9 @@ module ALU8bit_tb;
     reg [3:0] sel;
     reg [7:0] A, B;
     wire [7:0] C;
+    wire cmp;
 
-    ALU8bit alu(sel, A, B, C);
+    ALU8bit alu(sel, A, B, C, cmp);
 
     initial begin
         $dumpfile("ALU8.vcd");
@@ -22,6 +23,7 @@ module ALU8bit_tb;
         B <= 8'd12;
         # 1
         `ASSERT(C == B)
+        `ASSERT(cmp == 1'b1)
 
         // NOT
         # 4
@@ -30,6 +32,7 @@ module ALU8bit_tb;
         B <= 8'd12;
         # 1
         `ASSERT(C == ~B)
+        `ASSERT(cmp == 1'b1)
 
         // AND
         # 4
@@ -38,6 +41,7 @@ module ALU8bit_tb;
         B <= 8'h25;
         # 1
         `ASSERT(C == (A & B))
+        `ASSERT(cmp == 1'b1)
 
         // OR
         # 4
@@ -46,6 +50,7 @@ module ALU8bit_tb;
         B <= 8'h8B;
         # 1
         `ASSERT(C == (A | B))
+        `ASSERT(cmp == 1'b1)
 
         // XOR
         # 4
@@ -54,6 +59,7 @@ module ALU8bit_tb;
         B <= 8'h45;
         # 1
         `ASSERT(C == (A ^ B))
+        `ASSERT(cmp == 1'b1)
 
         // left shift
         # 4
@@ -62,6 +68,7 @@ module ALU8bit_tb;
         B <= 8'h02;
         # 1
         `ASSERT(C == 8'h8C)
+        `ASSERT(cmp == 1'b1)
 
         // right shift logical
         # 4
@@ -70,6 +77,7 @@ module ALU8bit_tb;
         B <= 8'h02;
         # 1
         `ASSERT(C == 8'h28)
+        `ASSERT(cmp == 1'b1)
 
         // right shift arithmetic
         # 4
@@ -78,6 +86,7 @@ module ALU8bit_tb;
         B <= 8'h02;
         # 1
         `ASSERT(C == 8'hE8)
+        `ASSERT(cmp == 1'b1)
 
         # 4
         $display("PASSED");

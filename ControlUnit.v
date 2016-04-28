@@ -16,10 +16,10 @@
 // 01011 shift right logical
 // 01100 shift right arithmetic
 // 01101 jump
-// 01110
-// 01111
-// 10000
-// 10001
+// 01110 branch equal zero
+// 01111 branch not equal zero
+// 10000 branch greater than zero
+// 10001 branch less than zero
 // 10010
 // 10011
 // 10100
@@ -60,17 +60,20 @@ module ControlUnit(input rst,
     assign instShrl    = opNum[11];
     assign instShra    = opNum[12];
     assign instJmp     = opNum[13];
+    assign instBez     = opNum[14];
+    assign instBnez    = opNum[15];
+    assign instBgtz    = opNum[16];
+    assign instBltz    = opNum[17];
 
     Decoder5to32 iDec(inst[7:3], opNum);
 
     // register control signals
     assign regInEn  = ~rst & (instMov | instMovi | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra);
-    assign regOutEn = ~rst & (instMov | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra | instJmp);
+    assign regOutEn = ~rst & (instMov | instMvr0 | instNot | instAnd | instOr | instXor | instAdd | instSub | instShll | instShrl | instShra | instJmp | instBez | instBnez | instBgtz | instBltz);
 
     assign genConst = ~rst & instMovi;
 
-    // TODO: use this for jump and branch instructions
-    assign loadAddr = ~rst & instJmp;
+    assign loadAddr = ~rst & (instJmp | instBez | instBnez | instBgtz | instBltz);
 
     always @(rst, inst, instMvr0) begin
         // select register in
@@ -97,15 +100,19 @@ module ControlUnit(input rst,
 
         // select ALU functionality
         case (inst[7:3])
-             4: aluSel <= 4'b0001; // not
-             5: aluSel <= 4'b0010; // and
-             6: aluSel <= 4'b0011; // or
-             7: aluSel <= 4'b0100; // xor
-             8: aluSel <= 4'b0101; // add
-             9: aluSel <= 4'b0110; // subtract
-            10: aluSel <= 4'b0111; // shift left logical
-            11: aluSel <= 4'b1000; // shift right logical
-            12: aluSel <= 4'b1001; // shift right arithmetic
+             4: aluSel <= 4'd1;  // not
+             5: aluSel <= 4'd2;  // and
+             6: aluSel <= 4'd3;  // or
+             7: aluSel <= 4'd4;  // xor
+             8: aluSel <= 4'd5;  // add
+             9: aluSel <= 4'd6;  // subtract
+            10: aluSel <= 4'd7;  // shift left logical
+            11: aluSel <= 4'd8;  // shift right logical
+            12: aluSel <= 4'd9;  // shift right arithmetic
+            14: aluSel <= 4'd10; // equal to zero
+            15: aluSel <= 4'd11; // not equal to zero
+            16: aluSel <= 4'd12; // greater than zero
+            17: aluSel <= 4'd13; // less than zero
             default: aluSel <= 4'b0000;
         endcase
     end

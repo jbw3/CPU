@@ -27,7 +27,7 @@ module CPU(input clk, extRst,
     wire [7:0] dataA, dataB, dataC; // data buses
     wire [3:0] aluSel;
 	wire [2:0] rInSel, rOutSel;
-	wire rInEn, rOutEn, genConst, loadAddr;
+	wire rInEn, rOutEn, genConst, cuLoadAddr, loadAddr, cmp;
 
     // always reset immediately when the external reset
     // goes high
@@ -44,13 +44,15 @@ module CPU(input clk, extRst,
 
     /*** Program Counter ***/
 
+    assign loadAddr = cuLoadAddr & cmp;
+
     ProgramCounter pc(clk, rst, loadAddr, dataB, memAddr);
 
 
     /*** Control Unit ***/
 
 	ControlUnit cu(rst, memVal, aluSel, rInSel, rOutSel,
-                   rInEn, rOutEn, genConst, loadAddr);
+                   rInEn, rOutEn, genConst, cuLoadAddr);
 
 
     /*** General Purpose Registers ***/
@@ -71,6 +73,6 @@ module CPU(input clk, extRst,
 
     /*** ALU ***/
 
-    ALU8bit ALU(aluSel, dataA, dataB, dataC);
+    ALU8bit ALU(aluSel, dataA, dataB, dataC, cmp);
 
 endmodule
