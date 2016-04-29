@@ -1,7 +1,7 @@
 // ControlUnit_tb.v
 // John Wilkes
 
-`include "../../common/utils.v"
+`include "../../common/TestUtils.v"
 
 module ControlUnit_tb;
 

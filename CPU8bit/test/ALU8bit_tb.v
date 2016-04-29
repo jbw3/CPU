@@ -1,7 +1,7 @@
 // ALU8bit_tb.v
 // John Wilkes
 
-`include "../../common/utils.v"
+`include "../../common/TestUtils.v"
 
 module ALU8bit_tb;
 
