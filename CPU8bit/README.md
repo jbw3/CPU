@@ -17,7 +17,7 @@
 | MVR0 Rx     | Rx <- R0              | move R0 to Rx            |
 | NOT Rx      | R0 <- ~Rx             | not                      |
 | AND Rx      | R0 <- R0 & Rx         | and                      |
-| OR Rx       | R0 <- R0 \| Rx         | or                       |
+| OR Rx       | R0 <- R0 \| Rx        | or                       |
 | XOR Rx      | R0 <- R0 ^ Rx         | xor                      |
 | ADD Rx      | R0 <- R0 + Rx         | add                      |
 | SUB Rx      | R0 <- R0 - Rx         | subtract                 |
