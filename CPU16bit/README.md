@@ -9,8 +9,9 @@
 
 ## Instructions
 
-| Instruction | Operation             | Description              |
-|-------------|-----------------------|--------------------------|
-| NOP\*       |                       | no operation             |
+| Instruction     | Operation             | Description              |
+|-----------------|-----------------------|--------------------------|
+| NOP\*           |                       | no operation             |
+| MOV Ra, Rb\*    | Ra <- Rb              | move Rb to Ra            |
 
-*\* Not yet implemented*
+\*Not yet implemented
