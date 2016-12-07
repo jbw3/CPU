@@ -2,10 +2,18 @@
 
 
 ## Registers
+
 * 16 Registers (R0 - R15)
 * R0 is status register
 * R1 is stack pointer
 
+
+## Instruction Types
+
+* Register-Register
+* Register-Immediate
+* Regoster-Register-Immediate
+* Jump
 
 ## Instructions
 
